@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ShoppingBuddyWebApp.Models;
 
 namespace ShoppingBuddyWebApp.Data
 {
@@ -9,5 +10,6 @@ namespace ShoppingBuddyWebApp.Data
             : base(options)
         {
         }
+        public DbSet<ShoppingBuddyWebApp.Models.ShoppingCart> ShoppingCart { get; set; }
     }
 }
