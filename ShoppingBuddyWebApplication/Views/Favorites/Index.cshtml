@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ShoppingBuddyWebApplication.Models.Favorites>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Favorite recipes</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>Products</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+                <td>
+                    @foreach (var join in (ICollection<FavoritesProducts>)item.FavoritesProducts)
+                    {
+                        <ul>
+                        @foreach (var product in (List<Product>)ViewBag.Products)
+                        {
+                            @if (product.Id == join.ProductId){
+                                <li>@product.Name</li>
+                            }
+                        }
+                        </ul>
+                    }
+                </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

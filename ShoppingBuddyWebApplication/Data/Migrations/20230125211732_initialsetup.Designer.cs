@@ -226,7 +226,7 @@ namespace ShoppingBuddyWebApplication.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ShoppingBuddyWebApplication.Models.ShoppingList", b =>
+            modelBuilder.Entity("ShoppingBuddyWebApplication.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -240,7 +240,7 @@ namespace ShoppingBuddyWebApplication.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShoppingList");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -1,0 +1,41 @@
+﻿@model ShoppingBuddyWebApplication.Controllers.viewModels.FavoritesViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Favorites</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Favorites.Name" class="control-label"></label>
+                <input asp-for="Favorites.Name" class="form-control" />
+                <span asp-validation-for="Favorites.Name" class="text-danger"></span>
+                <br />
+                <label>Products</label>
+                @Html.ListBoxFor(m => m.Favorites.ProductIds, new SelectList(Model.Products, "Id", "Name"), new { @class = "form-control select2", multiple = "multiple" })
+                <script>
+                    $(document).ready(function () {
+                        $('.select2').select2();
+                    });
+                </script>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,11 +1,11 @@
 ﻿namespace ShoppingBuddyWebApplication.Models
 {
-    public class ShoppingList
+    public class Product
     {
         public int Id { get; set; }
-        public string Product { get; set; }
+        public string Name { get; set; }
 
-        public ShoppingList()
+        public Product()
         {
 
         }

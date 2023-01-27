@@ -10,11 +10,11 @@ using ShoppingBuddyWebApplication.Models;
 
 namespace ShoppingBuddyWebApplication.Controllers
 {
-    public class ShoppingListsController : Controller
+    public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ShoppingListsController(ApplicationDbContext context)
+        public ProductController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -22,25 +22,30 @@ namespace ShoppingBuddyWebApplication.Controllers
         // GET: ShoppingLists
         public async Task<IActionResult> Index()
         {
-              return View(await _context.ShoppingList.ToListAsync());
+              return View(await _context.Product.ToListAsync());
+        }
+        // GET: ShoppingLists/ShowSearchForm
+        public async Task<IActionResult> ShowSearchForm()
+        {
+            return View();
         }
 
         // GET: ShoppingLists/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.ShoppingList == null)
+            if (id == null || _context.Product == null)
             {
                 return NotFound();
             }
 
-            var shoppingList = await _context.ShoppingList
+            var product = await _context.Product
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (shoppingList == null)
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(shoppingList);
+            return View(product);
         }
 
         // GET: ShoppingLists/Create
@@ -54,31 +59,31 @@ namespace ShoppingBuddyWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Product")] ShoppingList shoppingList)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(shoppingList);
+                _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(shoppingList);
+            return View(product);
         }
 
         // GET: ShoppingLists/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.ShoppingList == null)
+            if (id == null || _context.Product == null)
             {
                 return NotFound();
             }
 
-            var shoppingList = await _context.ShoppingList.FindAsync(id);
-            if (shoppingList == null)
+            var product = await _context.Product.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
-            return View(shoppingList);
+            return View(product);
         }
 
         // POST: ShoppingLists/Edit/5
@@ -86,9 +91,9 @@ namespace ShoppingBuddyWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Product")] ShoppingList shoppingList)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Product product)
         {
-            if (id != shoppingList.Id)
+            if (id != product.Id)
             {
                 return NotFound();
             }
@@ -97,12 +102,12 @@ namespace ShoppingBuddyWebApplication.Controllers
             {
                 try
                 {
-                    _context.Update(shoppingList);
+                    _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ShoppingListExists(shoppingList.Id))
+                    if (!ProductExists(product.Id))
                     {
                         return NotFound();
                     }
@@ -113,25 +118,25 @@ namespace ShoppingBuddyWebApplication.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(shoppingList);
+            return View(product);
         }
 
         // GET: ShoppingLists/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.ShoppingList == null)
+            if (id == null || _context.Product == null)
             {
                 return NotFound();
             }
 
-            var shoppingList = await _context.ShoppingList
+            var product = await _context.Product
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (shoppingList == null)
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(shoppingList);
+            return View(product);
         }
 
         // POST: ShoppingLists/Delete/5
@@ -139,23 +144,23 @@ namespace ShoppingBuddyWebApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.ShoppingList == null)
+            if (_context.Product == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.ShoppingList'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Product'  is null.");
             }
-            var shoppingList = await _context.ShoppingList.FindAsync(id);
-            if (shoppingList != null)
+            var product = await _context.Product.FindAsync(id);
+            if (product != null)
             {
-                _context.ShoppingList.Remove(shoppingList);
+                _context.Product.Remove(product);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ShoppingListExists(int id)
+        private bool ProductExists(int id)
         {
-          return _context.ShoppingList.Any(e => e.Id == id);
+          return _context.Product.Any(e => e.Id == id);
         }
     }
 }
