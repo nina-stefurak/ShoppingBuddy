@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShoppingBuddyWebApplication.Data;
 
@@ -11,9 +12,10 @@ using ShoppingBuddyWebApplication.Data;
 namespace ShoppingBuddyWebApplication.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230127154609_ShoppingListMigration")]
+    partial class ShoppingListMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,47 +280,6 @@ namespace ShoppingBuddyWebApplication.Data.Migrations
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("ShoppingBuddyWebApplication.Models.ProductShoppingLists", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShoppingListId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductId", "ShoppingListId");
-
-                    b.HasIndex("ShoppingListId");
-
-                    b.ToTable("ProductShoppingLists");
-                });
-
-            modelBuilder.Entity("ShoppingBuddyWebApplication.Models.ShoppingLists", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CheckedProductIds")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ShoppingLists");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -398,44 +359,9 @@ namespace ShoppingBuddyWebApplication.Data.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("ShoppingBuddyWebApplication.Models.ProductShoppingLists", b =>
-                {
-                    b.HasOne("ShoppingBuddyWebApplication.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShoppingBuddyWebApplication.Models.ShoppingLists", "ShoppingList")
-                        .WithMany("ProductShoppingLists")
-                        .HasForeignKey("ShoppingListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("ShoppingList");
-                });
-
-            modelBuilder.Entity("ShoppingBuddyWebApplication.Models.ShoppingLists", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ShoppingBuddyWebApplication.Models.Favorites", b =>
                 {
                     b.Navigation("FavoritesProducts");
-                });
-
-            modelBuilder.Entity("ShoppingBuddyWebApplication.Models.ShoppingLists", b =>
-                {
-                    b.Navigation("ProductShoppingLists");
                 });
 #pragma warning restore 612, 618
         }

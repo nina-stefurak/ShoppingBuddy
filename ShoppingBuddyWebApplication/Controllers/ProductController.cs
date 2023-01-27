@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,24 +14,24 @@ namespace ShoppingBuddyWebApplication.Controllers
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ProductController(ApplicationDbContext context)
+        public ProductController(ApplicationDbContext context,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // GET: ShoppingLists
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Product.ToListAsync());
+              return View(await _context.Product.Include(p=>p.Owner).ToListAsync());
         }
-        // GET: ShoppingLists/ShowSearchForm
         public async Task<IActionResult> ShowSearchForm()
         {
             return View();
         }
 
-        // GET: ShoppingLists/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Product == null)
@@ -48,21 +49,19 @@ namespace ShoppingBuddyWebApplication.Controllers
             return View(product);
         }
 
-        // GET: ShoppingLists/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: ShoppingLists/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Product product)
         {
             if (ModelState.IsValid)
             {
+                var user = await _userManager.GetUserAsync(User);
+                product.OwnerId = user.Id;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -70,7 +69,6 @@ namespace ShoppingBuddyWebApplication.Controllers
             return View(product);
         }
 
-        // GET: ShoppingLists/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Product == null)
@@ -86,9 +84,6 @@ namespace ShoppingBuddyWebApplication.Controllers
             return View(product);
         }
 
-        // POST: ShoppingLists/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Product product)
@@ -102,6 +97,8 @@ namespace ShoppingBuddyWebApplication.Controllers
             {
                 try
                 {
+                    var user = await _userManager.GetUserAsync(User);
+                    product.OwnerId = user.Id;
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
@@ -121,7 +118,6 @@ namespace ShoppingBuddyWebApplication.Controllers
             return View(product);
         }
 
-        // GET: ShoppingLists/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Product == null)
@@ -139,7 +135,6 @@ namespace ShoppingBuddyWebApplication.Controllers
             return View(product);
         }
 
-        // POST: ShoppingLists/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

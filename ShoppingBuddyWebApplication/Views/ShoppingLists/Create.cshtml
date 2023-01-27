@@ -1,0 +1,55 @@
+﻿@model ShoppingBuddyWebApplication.Models.ShoppingLists
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>ShoppingLists</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div style="display:none">
+                <label asp-for="UserId" class="control-label"></label>
+                <input asp-for="UserId" class="form-control" value="@UserManager.GetUserId(User)" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div style="display:none">
+                <label asp-for="CheckedProductIds" class="control-label"></label>
+                <input asp-for="CheckedProductIds" class="form-control" value="''" />
+                <span asp-validation-for="CheckedProductIds" class="text-danger"></span>
+            </div>
+            <div>
+            <br />
+            <label>Products</label>
+            @Html.ListBoxFor(m => m.ProductIds, new SelectList(ViewBag.Products, "Id", "Name"), new { @class = "form-control select2", multiple = "multiple" })
+            <script>
+                $(document).ready(function () {
+                    $('.select2').select2();
+                });
+            </script>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

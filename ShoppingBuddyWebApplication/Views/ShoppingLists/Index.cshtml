@@ -1,10 +1,11 @@
-﻿@model IEnumerable<ShoppingBuddyWebApplication.Models.Product>
+﻿
+@model IEnumerable<ShoppingBuddyWebApplication.Models.ShoppingLists>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>All products list</h1>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -15,8 +16,13 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th>Created By</th>
-            <th>Actions</th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckedProductIds)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -25,7 +31,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>@Html.DisplayFor(modelItem => item.Owner.UserName)</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckedProductIds)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Id)
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

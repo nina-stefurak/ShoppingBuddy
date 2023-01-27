@@ -14,8 +14,8 @@ namespace ShoppingBuddyWebApplication.Data
         }
         public DbSet<ShoppingBuddyWebApplication.Models.Product> Product { get; set; }
         public DbSet<ShoppingBuddyWebApplication.Models.Favorites> Favorites { get; set; }
-
         public DbSet<ShoppingBuddyWebApplication.Models.FavoritesProducts> FavoritesProducts { get; set; }
+        public DbSet<ShoppingBuddyWebApplication.Models.ShoppingLists> ShoppingLists { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
@@ -29,7 +29,12 @@ namespace ShoppingBuddyWebApplication.Data
                 .HasForeignKey(fp => fp.FavoriteId);
             modelBuilder.Entity<FavoritesProducts>()
                 .HasKey(fp => new { fp.FavoriteId, fp.ProductId });
-
+            modelBuilder.Entity<ShoppingLists>()
+                .HasMany(f => f.ProductShoppingLists)
+                .WithOne(fp => fp.ShoppingList)
+                .HasForeignKey(fp => fp.ShoppingListId);
+            modelBuilder.Entity<ProductShoppingLists>()
+                .HasKey(ps=>new {ps.ProductId, ps.ShoppingListId});
         }
     }
 }
