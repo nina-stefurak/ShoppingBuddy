@@ -16,6 +16,7 @@ namespace ShoppingBuddyWebApplication.Data
         public DbSet<ShoppingBuddyWebApplication.Models.Favorites> Favorites { get; set; }
         public DbSet<ShoppingBuddyWebApplication.Models.FavoritesProducts> FavoritesProducts { get; set; }
         public DbSet<ShoppingBuddyWebApplication.Models.ShoppingLists> ShoppingLists { get; set; }
+        public DbSet<ShoppingBuddyWebApplication.Models.ProductShoppingLists> ProductShoppingLists { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
@@ -23,6 +24,9 @@ namespace ShoppingBuddyWebApplication.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<IdentityRole>()
+                .HasData(new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" });
+
             modelBuilder.Entity<Favorites>()
                 .HasMany(f => f.FavoritesProducts)
                 .WithOne(fp => fp.Favorite)

@@ -10,5 +10,8 @@ namespace ShoppingBuddyWebApplication.Models
         public string? OwnerId { get; set; }
         [ForeignKey("OwnerId")]
         public IdentityUser? Owner { get; set; }
+
+        [NotMapped]
+        public Boolean IsChecked { get; set; }  
     }
 }
