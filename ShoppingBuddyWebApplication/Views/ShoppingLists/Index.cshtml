@@ -17,7 +17,10 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CheckedProductIds)
+                Product Names
+            </th>
+            <th>
+                Done
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.User)
@@ -32,10 +35,18 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
+                <ul>
+                    @foreach (var name in (ICollection<string>)item.ProductNames)
+                    {
+                    <li>@name</li>
+                    }
+                </ul>
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.CheckedProductIds)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
+                @Html.DisplayFor(modelItem => item.User.UserName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

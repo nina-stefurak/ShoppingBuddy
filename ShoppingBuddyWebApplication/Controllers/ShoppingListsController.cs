@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 using ShoppingBuddyWebApplication.Data;
 using ShoppingBuddyWebApplication.Models;
 
@@ -29,6 +30,7 @@ namespace ShoppingBuddyWebApplication.Controllers
                 .Include(s => s.User)
                 .Include(s=> s.ProductShoppingLists)
                 .ThenInclude(list => list.Product)
+                .Select(it => it.FillProductNames())
                 .ToListAsync();
             return View(shoppingList);
         }
@@ -53,19 +55,31 @@ namespace ShoppingBuddyWebApplication.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.Products = _context.Product.ToList();
+            ViewData["Favorites"] = _context.Favorites.Include(f => f.FavoritesProducts)
+                            .ThenInclude(fp => fp.Product)
+                            .ToList();
+            ViewData["Products"] = _context.Product.ToList();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,UserId,ProductIds,CheckedProductIds")] ShoppingLists shoppingLists)
+        public async Task<IActionResult> Create([Bind("Id,Name,UserId,ProductIds,CheckedProductIds,FavoriteIds")] ShoppingLists shoppingLists)
         {
-            var user = await _userManager.FindByIdAsync(shoppingLists.UserId);
-            shoppingLists.User = user;
-            shoppingLists.CheckedProductIds = "";
             try
             {
+                var user = await _userManager.FindByIdAsync(shoppingLists.UserId);
+                shoppingLists.User = user;
+                shoppingLists.CheckedProductIds = "";
+                var formFavoriteIds = shoppingLists.FavoriteIds;
+                var favorites = _context.Favorites.Where(f => formFavoriteIds.Contains(f.Id))
+                    .Include(f=>f.FavoritesProducts)
+                    .ToList();
+                var favoriteProductIds = favorites.Select(f => f.FillProductIds())
+                    .SelectMany(f => f.ProductIds)
+                    .ToHashSet();
+                shoppingLists.ProductIds.AddRange(favoriteProductIds);
+                shoppingLists.ProductIds = shoppingLists.ProductIds.ToHashSet();
                 var transformed = shoppingLists.FillProductShoppingList(_context);
                 _context.Add(transformed);
                 await _context.SaveChangesAsync();

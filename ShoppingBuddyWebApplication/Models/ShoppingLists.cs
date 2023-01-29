@@ -16,6 +16,17 @@ namespace ShoppingBuddyWebApplication.Models
         public ICollection<ProductShoppingLists> ProductShoppingLists { get; set; } = new List<ProductShoppingLists>();
         [NotMapped]
         public ICollection<int>? ProductIds { get; set; } = new List<int>();
+        [NotMapped]
+        public string[] ProductNames { get; set; }
+
+        [NotMapped]
+        public ICollection<int>? FavoriteIds { get; set; } = new List<int>();
+
+        public ShoppingLists FillProductNames()
+        {
+            ProductNames = ProductShoppingLists.ToList().Select(p => p.Product.Name).ToArray();
+            return this;
+        }
 
         public ShoppingLists FillProductShoppingList(ApplicationDbContext context)
         {

@@ -6,9 +6,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>ShoppingLists</h4>
+<h1>Create new shopping list</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -39,6 +37,18 @@
                 });
             </script>
             </div>
+
+            <div>
+                <br />
+                <label>Favorites</label>
+                @Html.ListBoxFor(m => m.FavoriteIds, new SelectList(ViewBag.Favorites, "Id", "Name"), new { @class = "form-control select2", multiple = "multiple" })
+                <script>
+                    $(document).ready(function () {
+                        $('.select2').select2();
+                    });
+                </script>
+            </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
