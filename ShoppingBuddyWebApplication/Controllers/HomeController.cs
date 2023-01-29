@@ -13,6 +13,7 @@ namespace ShoppingBuddyWebApplication.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ShoppingListsController _shoppingListsController;
         public HomeController(ILogger<HomeController> logger,
              ApplicationDbContext context,
              UserManager<IdentityUser> userManager,
@@ -22,6 +23,7 @@ namespace ShoppingBuddyWebApplication.Controllers
             _context = context;
             _userManager = userManager;
             _signInManager = SignInManager;
+            _shoppingListsController = new ShoppingListsController(context, userManager);
         }
 
         public IActionResult Index()
@@ -46,6 +48,23 @@ namespace ShoppingBuddyWebApplication.Controllers
                 ViewBag.ShoppingList = shoppingLists;
             }
             return View();
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _shoppingListsController.DeleteConfirmed(id);
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Index"
+            });
+        }
+        [ActionName("Edit")]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            return await _shoppingListsController.Edit(id);
         }
 
         public IActionResult Privacy()

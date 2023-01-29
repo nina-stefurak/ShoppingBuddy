@@ -99,31 +99,40 @@ namespace ShoppingBuddyWebApplication.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
+            ViewData["Favorites"] = _context.Favorites.Include(f => f.FavoritesProducts)
+                            .ThenInclude(fp => fp.Product)
+                            .ToList();
+            ViewData["Products"] = _context.Product.ToList();
             if (id == null || _context.ShoppingLists == null)
             {
                 return NotFound();
             }
 
-            var shoppingLists = await _context.ShoppingLists.FindAsync(id);
+            var shoppingLists = _context.ShoppingLists.Where(sl => sl.Id == id)
+                .Include(sl => sl.ProductShoppingLists)
+                .ThenInclude(ps => ps.Product)
+                .First()
+                .FillProductNames()
+                .FillProducts();
             if (shoppingLists == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", shoppingLists.UserId);
             return View(shoppingLists);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CheckedProductIds,UserId")] ShoppingLists shoppingLists)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,UserId,ProductIds,CheckedProductIds,FavoriteIds")] ShoppingLists shoppingLists)
         {
             if (id != shoppingLists.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            shoppingLists = shoppingLists.FillProductNames().FillProducts();
+
+ 
                 try
                 {
                     _context.Update(shoppingLists);
@@ -141,9 +150,7 @@ namespace ShoppingBuddyWebApplication.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", shoppingLists.UserId);
-            return View(shoppingLists);
+     
         }
         public async Task<IActionResult> Delete(int? id)
         {

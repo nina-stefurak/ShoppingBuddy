@@ -23,14 +23,14 @@
                                         @foreach (var product in shoppingItem.ProductShoppingLists)
                                         {
                                             <li>
-                                                <input type="checkbox" name="@product.Product.Id" value="@product.Product.Name" @(product.Product.IsChecked ? "checked" : "") />
                                                 <label for="@product.Product.Id">@product.Product.Name</label>
                                             </li>
                                         }
                                     </ul>
-                                    <input type="submit" value="Update" class="w-100 btn btn-lg btn-primary" />
+                                    <input asp-action="Edit" asp-route-id="@shoppingItem.Id" type="submit" value="Edit" class="w-100 btn btn-lg btn-primary" />
+                                    <br>
+                                    <input asp-action="Delete" asp-route-id="@shoppingItem.Id" type="submit" value="Delete" class="w-100 btn btn-lg btn-danger" />
                                 </div>
-
                             </div>
 
                         </div>
