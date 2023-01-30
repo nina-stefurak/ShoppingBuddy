@@ -10,13 +10,13 @@ Celem aplikacji "Shopping Buddy" jest ułatwienie procesu planowania i organizac
 
 ## Funkcje:
 
-- Lista zakupów
+- Lista zakupów:
 Użytkownicy mogą tworzyć i zarządzać swoimi listami zakupów.
-- Lista wszystkich produktów
+- Lista wszystkich produktów:
 Użytkownicy mogą przeglądać wszystkie dostępne produkty i dodawać je do swojej listy zakupów.
-- Lista ulubionych produktów z przepisów
+- Lista ulubionych produktów z przepisów:
 Użytkownicy mogą śledzić swoje ulubione produkty i przepisy, a także dodawać je do swojej listy zakupów.
-- Dostęp administratora
+- Dostęp administratora:
 Administrator ma dostęp do wszystkich funkcji aplikacji i może zarządzać produktami i użytkownikami.
 
 ## Instalacja:
